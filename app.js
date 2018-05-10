@@ -4,7 +4,12 @@ var express = require('express'),
 var app = express();
 
 var port = process.env.PORT || 3000;
-var db = mongoose.connect('mongodb://localhost/bookAPI'); // connecting to Mongo, bookAPI is the name of the db
+var db;
+if(process.env.ENV === 'Test') {
+    db = mongoose.connect('mongodb://localhost/bookAPI_test'); // connecting to Mongo, bookAPI is the name of the db
+} else {
+  db = mongoose.connect('mongodb://localhost/bookAPI'); // connecting to Mongo, bookAPI is the name of the db
+}
 var Book = require('./models/bookModel'); // create this so that we know what the data will look like
 bookRouter = require('./Routes/bookRoutes')(Book); // since it is created as a function we will need to execute it
 
@@ -21,3 +26,5 @@ app.get('/', function(req, res) {
 app.listen(port, function() {
    console.log('Gulp is running on PORT: ', port);
 });
+
+module.exports = app;
